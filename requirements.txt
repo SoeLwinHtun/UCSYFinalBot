@@ -1,0 +1,5 @@
+antiorm==1.2.1
+db==0.1.1
+db-sqlite3==0.0.1
+prettytable==3.9.0
+wcwidth==0.2.13
