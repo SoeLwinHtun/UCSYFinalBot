@@ -2,6 +2,26 @@ import re
 import datetime
 from prettytable import PrettyTable
 import sqlite3
+from openai import OpenAI
+
+
+def handle_openai_chat():
+    client = OpenAI(api_key='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') 
+    messages = [{"role": "system", "content": "You are an intelligent assistant."}] 
+
+    print("This is your assistant, how can I help you today? When you are done, enter 'exit' to quit the program.\n")
+    while True: 
+        message = input("You: ") 
+
+        if message == 'exit':
+            break
+        if message: 
+            messages.append({"role": "user", "content": message}) 
+            chat = client.chat.completions.create(model="gpt-3.5-turbo", messages=messages) 
+            reply = chat.choices[0].message.content 
+            print("\nBot:"+reply+"\n") 
+            messages.append({"role": "assistant", "content": reply})
+
 
 # Establish connection to the SQLite database
 conn = sqlite3.connect('finaldb.db')  # Replace 'your_database_name.db' with your actual database name
@@ -162,23 +182,28 @@ def check_timetables():
             print("Bot: I'm sorry, I didn't understand that. Please use one of the specified commands.")
 
 
-# Main function
 def main():
     print("Welcome to the UCSY Final Year Bot!")
     print("Choose an option:")
     print("1. Check Timetables")
     print("2. Inquire lecture details")
+    print("3.  Chatbot")
+    print("4. Exit")
 
-    option = input("Enter your choice (1 or 2): ")
+    option = input("Enter your choice: ")
 
     if option == '1':
         check_timetables()
-
     elif option == '2':
         inquire_lecture_details()
-
+    elif option == '3':
+        handle_openai_chat()
+    elif option == '4':
+        print("Exiting the program. Goodbye!")
+    elif option == 'exit':
+        print("Exiting the program. Goodbye!")
     else:
-        print("Invalid option. Please choose 1 or 2.")
+        print("Invalid option. Please choose again.")
 
 
 if __name__ == "__main__":
